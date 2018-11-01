@@ -3,8 +3,11 @@
   tasks:
     - name: Install Dependencies
       apt:
-        name: [u'build-essential', u'tcl']
-        update_cache: yes
+       name: "{{ packages }}"
+      vars:
+       packages:
+         - build-essential
+         - tcl
 
     - name: Download Redis
       get_url:
@@ -20,7 +23,7 @@
     - name: Build Sources
       make:
         chdir: /tmp/redis-stable
-        target: Install
+        target: install
         become: yes
 
     - name: Add User and Group
