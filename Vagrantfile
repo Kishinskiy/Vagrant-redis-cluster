@@ -21,8 +21,14 @@ Vagrant.configure("2") do |config|
     vm3.vm.hostname = "vm3"
   end
 
-  config.ssh.private_key_path = ["~/.ssh/id_rsa", "~/.vagrant.d/insecure_private_key"]
-  config.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/authorized_keys"
+  config.ssh.insert_key = false # 1
+  config.ssh.private_key_path = ['~/.vagrant.d/insecure_private_key', '~/.ssh/id_rsa'] # 2
+  config.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/authorized_keys" # 3
+  config.vm.provision "shell", inline: <<-EOC
+    sudo sed -i -e "\\#PasswordAuthentication yes# s#PasswordAuthentication yes#PasswordAuthentication no#g" /etc/ssh/sshd_config
+    sudo systemctl restart sshd.service
+    echo "finished"
+  EOC
 
 
 end
