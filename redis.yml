@@ -23,13 +23,13 @@
     - name: Build Sources
       make:
         chdir: /tmp/redis-stable
-        target: install
-      become: yes
+        target: Install
+        become: yes
 
     - name: Add User and Group
       shell: adduser --system --group --no-create-home redis
 
-    - name: Create directory
+    - name: Make directories and log files
       file:
         path: "{{item.path}}"
         state: "{{item.state}}"
