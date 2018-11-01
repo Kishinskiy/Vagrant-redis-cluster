@@ -47,9 +47,9 @@
         mode: 0770
       with_items:
         - {path: "/etc/redis/", state: "directory"}
-        - {path: "/var/lib/redis/", state: "directory"}
-        - {path: "/var/lib/redis/6379/", state: "directory"}
-        - {path: "/var/lib/redis/6380/", state: "directory"}
+        - {path: "/usr/lib/redis/", state: "directory"}
+        - {path: "/usr/lib/redis/6379/", state: "directory"}
+        - {path: "/usr/lib/redis/6380/", state: "directory"}
         - {path: "/var/log/redis/", state: "directory"}
 
     - name: Create Service and Configs
