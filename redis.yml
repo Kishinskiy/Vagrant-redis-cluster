@@ -3,21 +3,18 @@
   tasks:
     - name: Install Dependencies
       apt:
-        name: "{{item}}"
+        name: [u'build-essential', u'tcl']
         update_cache: yes
-      with_items:
-      - build-essential
-      - tcl
 
     - name: Download Redis
       get_url:
         url: http://download.redis.io/redis-stable.tar.gz
         dest: /tmp/redis-stable.tar.gz
 
-    - name: Extrackt Redis-server sources from archive
+    - name: Extract Redis-server sources from archive
       unarchive:
         src: /tmp/redis-stable.tar.gz
-        dest: /tmp/redis-stable
+        dest: /tmp/
         remote_src: yes
 
     - name: Build Sources
