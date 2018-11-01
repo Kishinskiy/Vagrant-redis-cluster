@@ -20,10 +20,9 @@ Vagrant.configure("2") do |config|
     vm3.vm.network "private_network", ip: "192.168.30.30"
     vm3.vm.hostname = "vm3"
   end
-  
-   config.vm.provision "shell", path: "bootstrap.sh"
-   config.vm.provision "file", source: "6379.conf", destination: "/etc/redis/6379.conf"
-   config.vm.provision "file", source: "6380.conf", destination: "/etc/redis/6380.conf"
-   config.vm.provision "file", source: "redis.service", destination: "/etc/systemd/system/redis@.service"   
+
+  config.ssh.private_key_path = ["~/.ssh/id_rsa", "~/.vagrant.d/insecure_private_key"]
+  config.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/authorized_keys"
+
 
 end
