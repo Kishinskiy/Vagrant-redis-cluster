@@ -1,6 +1,63 @@
----
 - hosts: all
   become: yes
-  roles:
-   - redis
+  tasks:
+    - name: Install Dependencies
+      apt:
+        name: "{{item}}"
+        update_cache: yes
+      with_items:
+      - build-essential
+      - tcl
 
+    - name: Download Redis
+      get_url:
+        url: http://download.redis.io/redis-stable.tar.gz
+        dest: /tmp/redis-stable.tar.gz
+
+    - name: Extrackt Redis-server sources from archive
+      unarchive:
+        src: /tmp/redis-stable.tar.gz
+        dest: /tmp/redis-stable
+        remote_src: yes
+
+    - name: Build Sources
+      make:
+        chdir: /tmp/redis-stable
+        target: install
+      become: yes
+
+    - name: Add User and Group
+      shell: adduser --system --group --no-create-home redis
+
+    - name: Create directory
+      file:
+        path: "{{item.path}}"
+        state: "{{item.state}}"
+      with_items:
+      - { path: "/etc/redis", state: directory}
+      - { path: "/var/lib/redis/6379/", state: directory}
+      - { path: "/var/lib/redis/6380/", state: directory}
+      - { path: "/var/log/redis/6379.log", state: file}
+      - { path: "/var/log/redis/6380.log", state: file}
+      owner: redis
+      group: redis
+      mode: 0750
+
+    - name: Create Service and Configs
+      template:
+        src: "{{item.src}}"
+        dest: "{{item.dest}}"
+        state: file
+      with_items:
+      - { src: redis.j2, dest:  /etc/systemd/system/redis@.service}
+      - { src: 6379.j2, dest: /etc/redis/6379.conf}
+      - { src: 6380.j2, dest: /etc/redis/6380.conf}
+
+    - name: Start Services
+      service:
+        name: "{{item}}"
+        enabled: yes
+        state: started
+      with_items:
+      - redis@6379
+      - redis@6380

@@ -29,6 +29,8 @@ Vagrant.configure("2") do |config|
     sudo systemctl restart sshd.service
     echo "finished"
   EOC
+ config.vm.provision "shell",
+    inline:"apt install python -y"
 
 
 end
