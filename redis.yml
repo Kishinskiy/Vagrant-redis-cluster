@@ -51,14 +51,11 @@
         - {path: "/var/lib/redis/6379/", state: "directory"}
         - {path: "/var/lib/redis/6380/", state: "directory"}
         - {path: "/var/log/redis/", state: "directory"}
-        # - {path: "/var/log/redis/6379.log", state: "file"}
-        # - {path: "/var/log/redis/6380.log", state: "file"}
 
     - name: Create Service and Configs
       template:
         src: "{{item.src}}"
         dest: "{{item.dest}}"
-        # state: file
       with_items:
       - { src: redis.j2, dest:  /etc/systemd/system/redis@.service}
       - { src: 6379.j2, dest: /etc/redis/6379.conf}
