@@ -34,24 +34,27 @@
     - name: Make directories
       file:
         path: "{{item}}"
+        owner: redis
+        group: redis
+        mode: 0750
       with_items:
       - /etc/redis/
+      - /var/lib/redis/
       - /var/lib/redis/6379/
       - /var/lib/redis/6380/
-      owner: redis
-      group: redis
-      mode: 0750
+
 
     - name: Make log files
       file:
         path: "{{item}}"
         state: touch
+        owner: redis
+        group: redis
+        mode: 0750
       with_items:
       - /var/log/redis/6379.log
       - /var/log/redis/6380.log
-      owner: redis
-      group: redis
-      mode: 0750
+
 
     - name: Create Service and Configs
       template:
