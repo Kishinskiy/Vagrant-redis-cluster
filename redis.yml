@@ -27,7 +27,9 @@
         become: yes
 
     - name: Add User and Group
-      shell: adduser --system --group --no-create-home redis
+      user:
+        name: redis
+        group: redis
 
     - name: Make directories and log files
       file:
